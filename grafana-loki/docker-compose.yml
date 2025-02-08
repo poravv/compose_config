@@ -1,0 +1,37 @@
+
+volumes:
+  grafana-data:
+  loki-data:
+
+services:
+  grafana:
+    image: grafana/grafana:8.0.6
+    container_name: grafana
+    restart: unless-stopped
+    volumes:
+      - grafana-data:/var/lib/grafana
+    ports:
+      - 3001:3000
+    networks:
+      - loki-net
+    depends_on:
+      - loki
+      
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    networks:
+      - loki-net
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
+    networks:
+      - loki-net
+    depends_on:
+      - loki
+
+#docker-compose-mongodb up -d
+#docker-compose -f docker-compose-mongodb.yml up -d

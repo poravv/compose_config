@@ -1,0 +1,33 @@
+{
+    "version": 3,
+    "name": "API Gateway",
+    "port": 8080,
+    "cache_ttl": "3600s",
+    "timeout": "3000ms",
+    "extra_config": {
+      "security/api-keys": {
+        "x-api-key": ["my-secret-api-key"]
+      }
+    },
+    "endpoints": [
+      {
+        "endpoint": "/ping",
+        "method": "GET",
+        "backend": [
+            {
+                "method":"GET",
+                "host":[
+                    "http://numbersapi.com"
+                ],
+                "url_pattern":"/random/math?json",
+                "extra_config": {
+                    "security/api-keys": {
+                        "x-api-key": ["my-secret-api-key"]
+                    }
+                }
+            }
+        ]
+      }
+    ]
+  }
+  

@@ -1,0 +1,29 @@
+version: '3.3'
+services:
+  gateway:
+    image: openfaas/gateway:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - read_timeout=60s
+      - write_timeout=60s
+      - upstream_timeout=60s
+      - faas_nats_address=nats
+    networks:
+      - openfaas
+    depends_on:
+      - nats
+      - prometheus
+
+  nats:
+    image: nats-streaming:latest
+    networks:
+      - openfaas
+
+  prometheus:
+    image: prom/prometheus:latest
+    networks:
+      - openfaas
+networks:
+  openfaas:
+    driver: overlay

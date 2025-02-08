@@ -1,0 +1,26 @@
+version: '3'
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: always
+    hostname: gitlab.mindtechpy.net
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.mindtechpy.net'
+        nginx['listen_port'] = 80
+        nginx['listen_https'] = false
+        gitlab_rails['initial_root_password'] = 'Password'
+    ports:
+      - "82:80"   # Cambiado de 80 a 82 para HTTP
+      - "23:22"   # Cambiado de 22 a 23 para SSH
+    volumes:
+      - /srv/gitlab/config:/etc/gitlab
+      - /srv/gitlab/logs:/var/log/gitlab
+      - /srv/gitlab/data:/var/opt/gitlab
+    networks:
+      - gitlab-network
+
+networks:
+  gitlab-network:
+    driver: bridge

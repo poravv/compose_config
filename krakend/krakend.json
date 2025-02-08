@@ -1,0 +1,62 @@
+{
+  "version": 3,
+  "name": "KrakenD API Gateway",
+  "port": 8080,
+  "extra_config": {
+    "telemetry/logging": {
+      "level": "DEBUG",
+      "stdout": true
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/ping",
+      "method":"GET",
+      "backend": [
+        {
+          "method":"GET",
+          "host":[
+            "http://192.168.100.232:3000"
+          ],
+          "url_pattern":"/ping"
+        }
+      ]
+    },
+    {
+      "endpoint":"/login",
+      "method":"GET",
+      "backend":[
+        {
+          "url_pattern":"/token/authorize",
+          "method":"POST",
+          "host":[
+            "http://192.168.100.232"
+          ],
+          "encoding":"form-urlencoded",
+          "query_strings":[
+            "username",
+            "password"
+          ],
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic xxxxxxxxxxxx"
+              }
+            },
+            "headers_to_send":[
+              "Authorization"
+            ],
+            "static_headers":{
+              "Content-Type":"application/x-www-form-urlencoded",
+              "grant_type":"password",
+              "scope":"write",
+              "authentication_type":"PASSWORD"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

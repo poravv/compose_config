@@ -1,0 +1,17 @@
+
+services:
+  krakend:
+    image: devopsfaith/krakend:latest
+    container_name: krakend
+    restart: always
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./krakend_x_api_key.json:/etc/krakend/krakend.json:ro
+    networks:
+      - krakend_network
+    command: [ "run", "-c", "/etc/krakend/krakend.json" ]
+
+networks:
+  krakend_network:
+    driver: bridge
